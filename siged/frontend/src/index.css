@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #f3f4f6;
+  --color-surface: #ffffff;
+  --color-primary: #4c6ef5;
+  --color-secondary: #4f00d9;
+  --color-accent: #6d5efc;
+  --color-success: #16a34a;
+  --color-warning: #eab308;
+  --color-danger: #dc2626;
+  --color-header-top: #ffffff;
+  --color-sidebar: #330099;
+  --color-sidebar-active: #7399ff;
+  --color-sidebar-hover: #6488ee;
+  --color-heading-block: #f8fafc;
+  --color-heading-block-border: #4c6ef5;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400 800;
+  src: url(https://fonts.gstatic.com/s/manrope/v15/xn7gYHE41ni1AdIRggexSg.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7W0Q5n-wU.woff2) format('woff2');
+}
