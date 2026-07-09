@@ -4,34 +4,33 @@
 venv/
 env/
 __pycache__/
+**/__pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-*.log
-
-# Variables de entorno
-.env
-.env.*
 
 # Base de datos local
 db.sqlite3
 *.sqlite3
 
-# Django media/static generados
+# Variables de entorno
+.env
+.env.*
+
+# Django
 media/
 staticfiles/
 
-# Node / React / Vite
-**/node_modules/
+# Frontend
 node_modules/
+**/node_modules/
 dist/
 build/
 .vite/
 
-# IDEs
+# IDE
 .idea/
 .vscode/
-*.iml
 
 # Sistema
 .DS_Store
