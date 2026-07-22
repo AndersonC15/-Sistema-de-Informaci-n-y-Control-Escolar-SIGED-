@@ -1,8 +1,28 @@
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user, isAdministrador, isAutoridadAcademica } = useAuth();
+  const navigate = useNavigate();
+
+  const shortcuts = [];
+  if (isAdministrador()) {
+    shortcuts.push({
+      icon: 'school',
+      title: 'Gestión de instituciones',
+      desc: 'Administra instituciones educativas y autoridades académicas',
+      path: '/instituciones',
+    });
+  }
+  if (isAutoridadAcademica()) {
+    shortcuts.push({
+      icon: 'group',
+      title: 'Mis instituciones',
+      desc: 'Acceda a las instituciones educativas que tiene asignadas',
+      path: '/mis-instituciones',
+    });
+  }
 
   return (
     <Layout>
@@ -20,6 +40,32 @@ export default function Dashboard() {
             <span className="material-symbols-outlined text-8xl text-primary">school</span>
           </div>
         </section>
+
+        {shortcuts.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {shortcuts.map((s) => (
+              <button
+                key={s.path}
+                onClick={() => navigate(s.path)}
+                className="bg-surface border border-gray-200 rounded-sm overflow-hidden flex flex-col shadow-sm hover:shadow-md transition-shadow text-left"
+              >
+                <div className="pt-8 pb-6 px-6 flex flex-col items-center text-center">
+                  <div className="mb-4">
+                    <span className="material-symbols-outlined text-6xl text-primary">
+                      {s.icon}
+                    </span>
+                  </div>
+                  <h3 className="text-[17px] font-bold text-gray-900">{s.title}</h3>
+                  <p className="text-[13px] text-gray-500 mt-2">{s.desc}</p>
+                </div>
+                <div className="w-full bg-primary text-white py-3.5 flex items-center justify-center gap-2 font-bold text-[14px]">
+                  <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                  Ingresar
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
 
         <div className="w-[280px]">
           <div className="bg-surface border border-gray-200 rounded-sm overflow-hidden flex flex-col shadow-sm">

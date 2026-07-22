@@ -3,8 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { APP_TITLE, APP_FOOTER } from '../config/app';
 
-export default function Layout({ children }) {
-  const { user, logout, isAdministrador, isAutoridadAcademica } = useAuth();
+export default function InstitutionLayout({ children, institucionId }) {
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -16,43 +16,39 @@ export default function Layout({ children }) {
 
   const menuItems = [
     {
-      id: 'home',
-      label: 'Menú principal',
-      icon: 'home',
+      id: 'back',
+      label: 'Volver al menú principal',
+      icon: 'arrow_back',
       path: '/',
-      visible: true,
     },
     {
-      id: 'instituciones',
-      label: 'Instituciones',
+      id: 'mi-institucion',
+      label: 'Mi institución',
       icon: 'school',
-      path: '/instituciones',
-      visible: isAdministrador(),
+      path: `/instituciones/${institucionId}`,
     },
     {
-      id: 'mis-instituciones',
-      label: 'Mis instituciones',
-      icon: 'group',
-      path: '/mis-instituciones',
-      visible: isAutoridadAcademica(),
+      id: 'planes',
+      label: 'Planes de estudio',
+      icon: 'menu_book',
+      path: `/instituciones/${institucionId}/planes`,
     },
-  ].filter((item) => item.visible);
+  ];
+
+  const isActive = (path) => {
+    if (path === `/instituciones/${institucionId}`) {
+      return location.pathname === path;
+    }
+    if (path === `/instituciones/${institucionId}/planes`) {
+      return location.pathname === path || location.pathname.startsWith(`${path}/`);
+    }
+    return location.pathname === path;
+  };
 
   const go = (path) => {
     setSidebarOpen(false);
     navigate(path);
   };
-
-  const menuButton = (path, label, icon, activeCls) => (
-    <button
-      key={path}
-      className={`flex items-center gap-4 px-6 py-5 transition-colors w-full text-left ${activeCls}`}
-      onClick={() => go(path)}
-    >
-      <span className="material-symbols-outlined text-3xl">{icon}</span>
-      <span className="text-[17px] font-bold">{label}</span>
-    </button>
-  );
 
   return (
     <div className="flex flex-col min-h-screen font-['Manrope'] bg-surface overflow-x-hidden">
@@ -82,12 +78,26 @@ export default function Layout({ children }) {
           </div>
           <nav className="mt-4">
             {menuItems.map((item) => {
-              const active = location.pathname === item.path;
+              const active = isActive(item.path);
               const base = 'hover:bg-sidebar-hover transition-colors';
               const activeCls = active
                 ? `bg-sidebar-active ${base}`
                 : base;
-              return menuButton(item.path, item.label, item.icon, activeCls);
+              return (
+                <button
+                  key={item.id}
+                  className={`flex items-center gap-4 px-6 py-5 transition-colors w-full text-left ${activeCls}`}
+                  onClick={() => go(item.path)}
+                >
+                  <span
+                    className="material-symbols-outlined text-3xl"
+                    style={active ? { fontVariationSettings: "'FILL' 1" } : {}}
+                  >
+                    {item.icon}
+                  </span>
+                  <span className="text-[17px] font-bold">{item.label}</span>
+                </button>
+              );
             })}
           </nav>
         </aside>
@@ -122,9 +132,7 @@ export default function Layout({ children }) {
         </div>
       </header>
 
-      <main className="flex-grow bg-surface">
-        {children}
-      </main>
+      <main className="flex-grow bg-surface">{children}</main>
 
       <footer className="p-8 text-center text-gray-400 text-xs">{APP_FOOTER}</footer>
     </div>

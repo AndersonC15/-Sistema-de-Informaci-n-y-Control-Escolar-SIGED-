@@ -71,7 +71,7 @@ export default function Login() {
 
           <form className="space-y-8" onSubmit={handleSubmit}>
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-danger/10 border border-danger/30 text-danger px-4 py-3 rounded-lg text-sm">
                 {error}
               </div>
             )}

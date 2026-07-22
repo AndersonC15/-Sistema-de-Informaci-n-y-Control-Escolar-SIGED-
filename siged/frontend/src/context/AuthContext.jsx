@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import api from '../services/api';
+import { ENDPOINTS } from '../config/endpoints';
 
 const AuthContext = createContext(null);
 
@@ -10,7 +11,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      api.get('/api/auth/me/')
+      api.get(ENDPOINTS.ME)
         .then((res) => setUser(res.data))
         .catch(() => localStorage.removeItem('token'))
         .finally(() => setLoading(false));
@@ -20,7 +21,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (numeroIdentificacion, password) => {
-    const res = await api.post('/api/auth/login/', {
+    const res = await api.post(ENDPOINTS.LOGIN, {
       numero_identificacion: numeroIdentificacion,
       password,
     });
@@ -31,15 +32,23 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      await api.post('/api/auth/logout/');
-    } catch {
-    }
+      await api.post(ENDPOINTS.LOGOUT);
+    } catch {}
     localStorage.removeItem('token');
     setUser(null);
   };
 
+  const hasRole = (roleName) => Boolean(user?.roles?.includes(roleName));
+  const isAdministrador = () => hasRole('ADMINISTRADOR') || user?.is_superuser;
+  const isAutoridadAcademica = () => hasRole('AUTORIDAD_ACADEMICA');
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        user, loading, login, logout,
+        hasRole, isAdministrador, isAutoridadAcademica,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
